@@ -419,10 +419,31 @@ document.getElementById('imageFile').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    alert('Please select an image file');
+    e.target.value = '';
+    return;
+  }
+
+  // Validate file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Image file is too large. Maximum size is 5MB.');
+    e.target.value = '';
+    return;
+  }
+
   const formData = new FormData();
   formData.append('image', file);
 
+  // Show loading state
+  const imageInput = document.getElementById('image');
+  const originalValue = imageInput.value;
+  imageInput.value = 'Uploading...';
+  imageInput.disabled = true;
+
   try {
+    console.log('Uploading image:', file.name);
     const res = await fetch('/api/upload', {
       method: 'POST',
       headers: {
@@ -431,18 +452,37 @@ document.getElementById('imageFile').addEventListener('change', async (e) => {
       body: formData
     });
 
-    if (!res.ok) {
-      throw new Error('Upload failed');
+    const data = await res.json();
+    console.log('Upload response:', data);
+
+    if (!res.ok || !data.ok) {
+      throw new Error(data.error || 'Upload failed');
     }
 
-    const data = await res.json();
-    if (data.ok) {
-      document.getElementById('image').value = data.path;
-    } else {
-      alert('Upload failed: ' + data.error);
-    }
+    imageInput.value = data.path;
+    
+    // Show success message
+    const successMsg = document.createElement('div');
+    successMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;';
+    successMsg.textContent = 'Image uploaded successfully';
+    document.body.appendChild(successMsg);
+    setTimeout(() => successMsg.remove(), 3000);
+
   } catch (err) {
-    alert('Upload failed: ' + err.message);
+    console.error('Upload error:', err);
+    
+    // Show error message
+    const errorMsg = document.createElement('div');
+    errorMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent2);color:#fff;padding:12px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;';
+    errorMsg.textContent = 'Upload failed: ' + err.message;
+    document.body.appendChild(errorMsg);
+    setTimeout(() => errorMsg.remove(), 5000);
+    
+    // Restore original value if there was one
+    imageInput.value = originalValue;
+  } finally {
+    imageInput.disabled = false;
+    e.target.value = ''; // Reset file input
   }
 });
 </script>

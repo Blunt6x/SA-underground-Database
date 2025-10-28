@@ -34,7 +34,7 @@
     "name": "BABYLOWSKI",
     "followers": "20,631",
     "monthly_listeners": "27,025",
-    "image": "images/babylowski.jpeg",
+    "image": "images/babylowski.jpg",
     "bio": "",
     "spotify": "https://open.spotify.com/artist/13nHu7ZVx4xVRsTFoQdfPx"
   },
@@ -115,7 +115,7 @@
     "name": "Babydiaz",
     "followers": "",
     "monthly_listeners": "111,068k",
-    "image": "images/babydiaz.jpg",
+    "image": "images/babydiaz.jpeg",
     "bio": "",
     "spotify": ""
   },
@@ -124,7 +124,7 @@
     "name": "Kindly Nxsh",
     "followers": "",
     "monthly_listeners": "117,083k",
-    "image": "images/kindlynxsh.jpg",
+    "image": "images/kindlynxsh.png",
     "bio": "",
     "spotify": ""
   },
@@ -133,7 +133,7 @@
     "name": "Mfanatouchline",
     "followers": "",
     "monthly_listeners": "51,359k",
-    "image": "images/mfanatouchline.jpg",
+    "image": "images/mfanatouchline-1.png",
     "bio": "",
     "spotify": ""
   },
@@ -142,7 +142,7 @@
     "name": "Guapo6x",
     "followers": "",
     "monthly_listeners": "2,810k",
-    "image": "images/guapo6x.jpg",
+    "image": "images/guapo6x.jpeg",
     "bio": "",
     "spotify": "https://open.spotify.com/artist/32Z0PKhcfKNJm2SvpimqGs"
   },
@@ -151,7 +151,7 @@
     "name": "ICEB0Y",
     "followers": "",
     "monthly_listeners": "6,468k",
-    "image": "images/iceb0y.jpg",
+    "image": "images/iceb0y.jpeg",
     "bio": "",
     "spotify": "https://open.spotify.com/artist/5V6sfuZS9ObS62cVoJNElW"
   },
@@ -417,5 +417,418 @@
     "image": "images/dmvmannel.jpg",
     "bio": "",
     "spotify": ""
+  },
+
+  {
+    "id": "aiden_greeff",
+    "name": "AIDEN.GREEFF",
+    "followers": "",
+    "monthly_listeners": "427",
+    "image": "images/aiden_greeff.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "jiimmy_4x",
+    "name": "Jiimmy.4x!",
+    "followers": "",
+    "monthly_listeners": "522",
+    "image": "images/jiimmy_4x.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "helmutlangk0",
+    "name": "Helmutlangk0",
+    "followers": "",
+    "monthly_listeners": "3,225k",
+    "image": "images/helmutlangk0.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "artillery",
+    "name": "Artillery",
+    "followers": "",
+    "monthly_listeners": "719",
+    "image": "images/artillery.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "ezzy_sa",
+    "name": "ezzy.sa",
+    "followers": "",
+    "monthly_listeners": "996",
+    "image": "images/ezzy_sa.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "prxme",
+    "name": "Prxme!",
+    "followers": "",
+    "monthly_listeners": "552",
+    "image": "images/prxme.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "saintayga",
+    "name": "saintayga",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/saintayga.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "ezra",
+    "name": "Ezra",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/ezra.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "sosalofe",
+    "name": "Sosalofe",
+    "followers": "",
+    "monthly_listeners": "82",
+    "image": "images/sosalofe.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "outkay",
+    "name": "$outkay",
+    "followers": "",
+    "monthly_listeners": "473",
+    "image": "images/outkay.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+
+
+  {
+    "id": "aiden_greeff",
+    "name": "AIDEN.GREEFF",
+    "followers": "",
+    "monthly_listeners": "427",
+    "image": "images/aiden_greeff.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "jiimmy_4x",
+    "name": "Jiimmy.4x!",
+    "followers": "",
+    "monthly_listeners": "522",
+    "image": "images/jiimmy_4x.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "helmutlangk0",
+    "name": "Helmutlangk0",
+    "followers": "",
+    "monthly_listeners": "3,225k",
+    "image": "images/helmutlangk0.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "artillery",
+    "name": "Artillery",
+    "followers": "",
+    "monthly_listeners": "719",
+    "image": "images/artillery.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "ezzy_sa",
+    "name": "ezzy.sa",
+    "followers": "",
+    "monthly_listeners": "996",
+    "image": "images/ezzy_sa.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "prxme",
+    "name": "Prxme!",
+    "followers": "",
+    "monthly_listeners": "552",
+    "image": "images/prxme.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "saintayga",
+    "name": "saintayga",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/saintayga.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "ezra",
+    "name": "Ezra",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/ezra.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "sosalofe",
+    "name": "Sosalofe",
+    "followers": "",
+    "monthly_listeners": "82",
+    "image": "images/sosalofe.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "outkay",
+    "name": "$outkay",
+    "followers": "",
+    "monthly_listeners": "473",
+    "image": "images/outkay.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+
+  {
+    "id": "blasionb0y",
+    "name": "BlasionB0Y",
+    "followers": "",
+    "monthly_listeners": "59",
+    "image": "images/blasionb0y.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "mitchell_richards",
+    "name": "Mitchell Richards",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/mitchell_richards.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "onlywinterr",
+    "name": "OnlyWinterr",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/onlywinterr.jpg",
+    "bio": "Producer",
+    "spotify": ""
+  },
+  {
+    "id": "kyuliar",
+    "name": "kyuliar",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/kyuliar.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "ethanvs",
+    "name": "Ethanvs",
+    "followers": "",
+    "monthly_listeners": "173",
+    "image": "images/ethanvs.jpg",
+    "bio": "Mainly producer but also raps",
+    "spotify": ""
+  },
+  {
+    "id": "jaysonmihara",
+    "name": "Jaysonmihara",
+    "followers": "",
+    "monthly_listeners": "4",
+    "image": "images/jaysonmihara.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "jordichrist",
+    "name": "Jordichrist",
+    "followers": "",
+    "monthly_listeners": "8",
+    "image": "images/jordichrist.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "onsworn",
+    "name": "Onsworn",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/onsworn.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "hater0nwokk",
+    "name": "Hater0nwokk",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/hater0nwokk.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "cockwihAids",
+    "name": "CockWihAids",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/cockwihaids.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+
+
+  {
+    "id": "guap4percs",
+    "name": "Guap4percs🫦",
+    "followers": "",
+    "monthly_listeners": "516",
+    "image": "images/guap4percs.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "bxttybylona",
+    "name": "Bxttybylona",
+    "followers": "",
+    "monthly_listeners": "98",
+    "image": "images/bxttybylona.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "kaviarallure",
+    "name": "Kaviarallure",
+    "followers": "",
+    "monthly_listeners": "88",
+    "image": "images/kaviarallure.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "nokorah",
+    "name": "Nokorah",
+    "followers": "",
+    "monthly_listeners": "500",
+    "image": "images/nokorah.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "hilly_the_artist",
+    "name": "Hilly the Artist",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/hilly_the_artist.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "justvuyo",
+    "name": "JustVuyo!",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/justvuyo.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "den_lagos",
+    "name": "Den Lagos",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/den_lagos.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "blaze",
+    "name": "blaze’",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/blaze.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "2facedbeast",
+    "name": "2facedbeast",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/2facedbeast.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "enin",
+    "name": "Enin",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/enin.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "xanny_doc",
+    "name": "xanny_doc",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/xanny_doc.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "billy_batson",
+    "name": "Billy batson",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/billy_batson.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "darkodeine",
+    "name": "darkodeine",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/darkodeine.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "mango_mp3",
+    "name": "Mango.mp3",
+    "followers": "",
+    "monthly_listeners": "",
+    "image": "images/mango_mp3.jpg",
+    "bio": "",
+    "spotify": ""
+  },
+  {
+    "id": "envymstwntd",
+    "name": "Envymstwntd",
+    "followers": "",
+    "monthly_listeners": "38",
+    "image": "images/envymstwntd.jpg",
+    "bio": "",
+    "spotify": ""
   }
 ]
+
+

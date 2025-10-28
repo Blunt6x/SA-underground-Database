@@ -17,11 +17,18 @@ app.use(express.static(path.join(__dirname))); // serve site files
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const dest = file.fieldname === 'music' ? 'music' : 'images';
-    cb(null, path.join(__dirname, dest))
+    const destPath = path.join(__dirname, dest);
+    
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(destPath)) {
+      fs.mkdirSync(destPath, { recursive: true });
+    }
+    
+    cb(null, destPath);
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, uniqueSuffix + path.extname(file.originalname))
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 })
 
@@ -51,15 +58,32 @@ app.post('/api/upload', (req, res) => {
   
   upload.single('image')(req, res, function (err) {
     if (err) {
+      console.error('Upload error:', err);
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ ok: false, error: 'File too large. Maximum size is 10MB.' });
+      }
       return res.status(400).json({ ok: false, error: err.message });
     }
+    
     if (!req.file) {
       return res.status(400).json({ ok: false, error: 'No file uploaded' });
     }
-    res.json({ 
-      ok: true, 
-      path: 'images/' + req.file.filename
-    });
+
+    try {
+      // Verify the file was actually written
+      const filePath = path.join(__dirname, 'images', req.file.filename);
+      if (!fs.existsSync(filePath)) {
+        throw new Error('File failed to save');
+      }
+
+      res.json({ 
+        ok: true, 
+        path: 'images/' + req.file.filename
+      });
+    } catch (error) {
+      console.error('File verification error:', error);
+      return res.status(500).json({ ok: false, error: 'Failed to save file' });
+    }
   });
 });
 
