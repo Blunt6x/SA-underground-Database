@@ -11,13 +11,52 @@
   .admin-wrap{max-width:900px;margin:24px auto;padding:18px;background:rgba(255,255,255,0.03);border-radius:12px}
   .form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
   .form-row input, .form-row textarea{flex:1;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
-  .artist-list-admin{margin-top:12px}
-  .artist-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px}
-  .artist-item button{margin-left:8px}
+  .artist-list-admin{
+    margin-top:12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 12px;
+    background: rgba(255,255,255,0.01);
+  }
+  .artist-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.03);
+    margin-bottom:8px;
+    transition: all 0.2s ease;
+  }
+  .artist-item:hover {
+    background:rgba(255,255,255,0.05);
+    transform: translateY(-2px);
+  }
+  .artist-item button{
+    margin-left:8px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+  .artist-item:hover button {
+    opacity: 1;
+  }
   .login-box{max-width:420px;margin:20px auto;padding:18px}
   .songs-list { margin-top: 12px; margin-bottom: 24px; }
   .song-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255,255,255,0.02); margin-bottom: 8px; border-radius: 6px; }
   #image { background-color: rgba(255,255,255,0.02); cursor: default; }
+  
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  
+  .delBtn {
+    transition: background-color 0.3s, opacity 0.3s;
+  }
+  .delBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 </style>
 </head>
 <body>
@@ -73,6 +112,13 @@
   </main>
 
 <script>
+// HTML sanitizer to prevent XSS
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text || '';
+  return div.innerHTML;
+}
+
 let token = null;
 const loginBtn = document.getElementById('loginBtn');
 loginBtn.addEventListener('click', async ()=>{
@@ -92,20 +138,56 @@ loginBtn.addEventListener('click', async ()=>{
 });
 
 async function loadArtists(){
-  const res = await fetch('/api/artists'); const list = await res.json();
-  const wrap = document.getElementById('artistsAdmin'); wrap.innerHTML='';
-  list.forEach(a=>{
-    const div = document.createElement('div'); div.className='artist-item';
-    div.innerHTML = `<div><strong>${a.name}</strong> <small style="color:var(--muted)">(${a.id})</small></div>
-      <div>
-        <button class="editBtn">Edit</button>
-        <button class="delBtn">Delete</button>
-      </div>`;
-    wrap.appendChild(div);
+  const wrap = document.getElementById('artistsAdmin');
+  
+  // Show loading state
+  wrap.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;">Loading artists...</div>';
+  
+  try {
+    const res = await fetch('/api/artists');
+    if (!res.ok) {
+      throw new Error(`Failed to load artists: ${res.status}`);
+    }
+    
+    const list = await res.json();
+    console.log('Artists loaded:', list); // Debug log
+    
+    wrap.innerHTML = ''; // Clear loading message
+    
+    if (!list || list.length === 0) {
+      wrap.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;">No artists added yet</div>';
+      return;
+    }
+    
+    list.forEach(a => {
+      if (!a || !a.name) return; // Skip invalid entries
+      
+      const div = document.createElement('div');
+      div.className = 'artist-item';
+      div.dataset.id = a.id || '';
+      div.innerHTML = `
+        <div>
+          <strong>${escapeHtml(a.name)}</strong>
+          ${a.id ? `<small style="color:var(--muted)">(${escapeHtml(a.id)})</small>` : ''}
+          ${a.followers ? `<div style="color:var(--muted);font-size:0.9em;margin-top:4px">${escapeHtml(a.followers)}</div>` : ''}
+        </div>
+        <div>
+          <button class="btn ghost editBtn">Edit</button>
+          <button class="btn ghost delBtn" style="background:var(--accent2);margin-left:8px;">Delete</button>
+        </div>`;
+      wrap.appendChild(div);
 
-    div.querySelector('.editBtn').addEventListener('click', ()=> populateEdit(a));
-    div.querySelector('.delBtn').addEventListener('click', ()=> doDelete(a.id));
-  });
+      div.querySelector('.editBtn').addEventListener('click', () => populateEdit(a));
+      div.querySelector('.delBtn').addEventListener('click', () => doDelete(a.id));
+    });
+  } catch (error) {
+    console.error('Error loading artists:', error);
+    wrap.innerHTML = `
+      <div style="text-align:center;color:var(--accent2);padding:20px;">
+        Error loading artists: ${error.message}
+        <button onclick="loadArtists()" class="btn ghost" style="margin-top:10px">Try Again</button>
+      </div>`;
+  }
 }
 
 function populateEdit(a){
@@ -136,11 +218,64 @@ async function doUpdate(id){
   else alert('Update failed');
 }
 
-async function doDelete(id){
-  if (!confirm('Delete artist?')) return;
-  const res = await fetch('/api/artists/'+encodeURIComponent(id), {method:'DELETE', headers:{'X-Auth-Token':token}});
-  if (res.ok) { alert('Deleted'); loadArtists(); }
-  else alert('Delete failed');
+async function doDelete(id) {
+  try {
+    // Create a confirmation dialog with more details
+    const confirmResult = confirm('Are you sure you want to delete this artist? This action cannot be undone.');
+    if (!confirmResult) return;
+
+    // Show loading state on the delete button
+    const deleteBtn = document.querySelector(`[data-id="${id}"] .delBtn`);
+    if (deleteBtn) {
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = 'Deleting...';
+    }
+
+    // Make the delete request
+    const res = await fetch('/api/artists/' + encodeURIComponent(id), {
+      method: 'DELETE',
+      headers: {
+        'X-Auth-Token': token,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // Handle the response
+    if (res.ok) {
+      // Success - show a nicer message and update the list
+      const successMsg = document.createElement('div');
+      successMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;';
+      successMsg.textContent = 'Artist deleted successfully';
+      document.body.appendChild(successMsg);
+      
+      // Remove the message after 3 seconds
+      setTimeout(() => successMsg.remove(), 3000);
+      
+      // Refresh the artists list
+      await loadArtists();
+    } else {
+      // Handle specific error cases
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Delete failed');
+    }
+  } catch (error) {
+    console.error('Delete error:', error);
+    // Show error message in a nicer way
+    const errorMsg = document.createElement('div');
+    errorMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent2);color:#fff;padding:12px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;';
+    errorMsg.textContent = error.message || 'Failed to delete artist';
+    document.body.appendChild(errorMsg);
+    
+    // Remove the error message after 5 seconds
+    setTimeout(() => errorMsg.remove(), 5000);
+  } finally {
+    // Reset any delete buttons that might be in loading state
+    const deleteButtons = document.querySelectorAll('.delBtn');
+    deleteButtons.forEach(btn => {
+      btn.disabled = false;
+      btn.textContent = 'Delete';
+    });
+  }
 }
 
 document.getElementById('addBtn').addEventListener('click', async ()=>{

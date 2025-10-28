@@ -37,8 +37,8 @@ function renderList(list){
         <div class="artist-meta">${escapeHtml(a.followers || '—')}</div>
       </div>
     `;
-    li.addEventListener('click', ()=> openDetail(a));
-    li.addEventListener('keypress', (e)=>{ if(e.key==='Enter') openDetail(a); });
+    li.addEventListener('click', (e)=> openDetail(a, e));
+    li.addEventListener('keypress', (e)=>{ if(e.key==='Enter') openDetail(a, e); });
     artistsEl.appendChild(li);
   });
 }
@@ -48,7 +48,16 @@ searchEl.addEventListener('input', (e) => {
   renderList(artists.filter(a => a.name.toLowerCase().includes(q)));
 });
 
-function openDetail(a){
+function openDetail(a, clickEvent){
+  // Prevent body scrolling when modal is open
+  document.body.style.overflow = 'hidden';
+
+  // Reset any previous modal positioning
+  modalBody.style.position = '';
+  modalBody.style.top = '';
+  modalBody.style.left = '';
+  modalBody.style.transform = '';
+  
   modalBody.innerHTML = `
     <div class="artist-detail">
       <img src="${a.image || 'assets/default.jpg'}" alt="${escapeHtml(a.name)}">
@@ -64,11 +73,34 @@ function openDetail(a){
       </div>
     </div>
   `;
+  
+  // Show modal
   modal.classList.remove('hidden');
+  
+  // Focus management for accessibility
+  const focusableElements = modalBody.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  if (focusableElements.length) {
+    setTimeout(() => focusableElements[0].focus(), 100);
+  }
+  
+  // Scroll modal content to top
+  modalBody.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-modalClose.addEventListener('click', ()=> modal.classList.add('hidden'));
-modal.addEventListener('click', (e)=> { if(e.target === modal) modal.classList.add('hidden'); });
+function closeModal() {
+  modal.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (e)=> { if(e.target === modal) closeModal(); });
+
+// Add keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+    closeModal();
+  }
+});
 document.getElementById('year').textContent = new Date().getFullYear();
 
 adminBtn.addEventListener('click', ()=> {
