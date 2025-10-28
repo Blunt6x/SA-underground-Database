@@ -189,8 +189,10 @@ app.delete('/api/songs/:id', (req, res) => {
 
 // Simple in-memory sessions (token -> expiry)
 const SESSIONS = {};
-const ADMIN_USER = 'blunt';
-const ADMIN_PASS = '198801';
+// Read admin credentials from environment variables in production
+// (falls back to defaults for local development)
+const ADMIN_USER = process.env.ADMIN_USER || 'blunt';
+const ADMIN_PASS = process.env.ADMIN_PASS || '198801';
 const TOKEN_TTL_MS = 1000 * 60 * 60; // 1 hour
 
 function readData() {

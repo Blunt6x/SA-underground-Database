@@ -103,8 +103,21 @@ body{
   opacity: 1;
 }
 .close{position:absolute;right:18px;top:18px;background:transparent;border:none;color:#fff;font-size:26px;cursor:pointer}
-.artist-detail{display:flex;gap:18px;align-items:flex-start}
-.artist-detail img{width:180px;height:180px;object-fit:cover;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+.artist-detail{
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
+  max-height: 90vh;
+  overflow: auto;
+}
+.artist-detail img{
+  width:180px;
+  height:180px;
+  object-fit:cover;
+  border-radius:12px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.6);
+  flex-shrink: 0;
+}
 .artist-detail h2{margin:0 0 8px}
 .artist-detail .meta{color:var(--muted);margin-bottom:8px}
 
