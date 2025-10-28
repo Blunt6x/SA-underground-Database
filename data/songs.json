@@ -1,0 +1,16 @@
+{
+  "songs": [
+    {
+      "id": "default-1",
+      "title": "Blunt Type Beat",
+      "artist": "SA Underground",
+      "path": "music/Blunttypebeat.mp3"
+    },
+    {
+      "id": "d2d602ac-e0b7-432e-973d-85eab73ff29b",
+      "title": "The Weeknd - Out of Time (Audio)",
+      "artist": "Unknown Artist",
+      "path": "music/1761658294726-189766583.mp3"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Artist — SA Underground</title>
+<link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  <main class="container" id="artistRoot"></main>
+<script>
+  // simple loader to read ?id=... and show artist if needed (optional)
+  fetch('data/artists.json').then(r=>r.json()).then(list=>{
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const root = document.getElementById('artistRoot');
+    if(!id){ root.innerHTML = '<p style="color:#aaa">No artist specified.</p>'; return; }
+    const a = list.find(x=>x.id===id);
+    if(!a){ root.innerHTML = '<p style="color:#aaa">Artist not found.</p>'; return; }
+    root.innerHTML = `<div class="artist-detail"><img src="${a.image||'assets/default.jpg'}" alt=""><h2>${a.name}</h2><p class="meta">Followers: ${a.followers||'—'}</p><p>${a.bio||''}</p></div>`;
+  }).catch(e=>{ document.getElementById('artistRoot').innerHTML='<p style="color:#aaa">Failed to load data.</p>'; });
+</script>
+</body>
+</html>

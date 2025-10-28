@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SA Underground — Artists</title>
+<link rel="stylesheet" href="styles/style.css">
+<meta name="description" content="Directory of SA underground rappers" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <h1>SA Underground Database</h1>
+      <p class="subtitle">Directory — Search • Listen • Support</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="controls">
+      <div class="search-row">
+        <input id="search" type="search" placeholder="Search artists..." aria-label="Search artists">
+      </div>
+      <div class="actions">
+        <button id="adminBtn" class="btn ghost">Admin</button>
+      </div>
+    </div>
+
+    <div id="musicPlayer" class="music-player">
+      <div class="music-controls">
+        <button id="prevBtn" class="btn ghost" aria-label="Previous song">⏮</button>
+        <button id="playBtn" class="btn ghost" aria-label="Play/Pause">▶️</button>
+        <button id="nextBtn" class="btn ghost" aria-label="Next song">⏭</button>
+        <input type="range" id="volumeSlider" min="0" max="100" value="100" class="volume-slider">
+      </div>
+      <div class="music-info">
+        <div id="songTitle">Select a song</div>
+        <div id="songArtist" class="song-artist"></div>
+      </div>
+      <audio id="audioPlayer"></audio>
+    </div>
+
+    <ul id="artists" class="artist-list" aria-live="polite"></ul>
+  </main>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button id="modalClose" class="close" aria-label="Close">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <small>Made by blunt• © <span id="year"></span></small>
+  </footer>
+
+<script src="scripts/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin - SA Underground</title>
+<link rel="stylesheet" href="styles/style.css">
+<style>
+  /* simple admin overrides */
+  .admin-wrap{max-width:900px;margin:24px auto;padding:18px;background:rgba(255,255,255,0.03);border-radius:12px}
+  .form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .form-row input, .form-row textarea{flex:1;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
+  .artist-list-admin{margin-top:12px}
+  .artist-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px}
+  .artist-item button{margin-left:8px}
+  .login-box{max-width:420px;margin:20px auto;padding:18px}
+  .songs-list { margin-top: 12px; margin-bottom: 24px; }
+  .song-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255,255,255,0.02); margin-bottom: 8px; border-radius: 6px; }
+  #image { background-color: rgba(255,255,255,0.02); cursor: default; }
+</style>
+</head>
+<body>
+  <header class="site-header"><div class="brand"><h1>Admin — SA Underground</h1></div></header>
+  <main class="container">
+    <div id="auth" class="login-box">
+      <h3>Admin login</h3>
+      <div class="form-row"><input id="user" placeholder="username"></div>
+      <div class="form-row"><input id="pass" type="password" placeholder="password"></div>
+      <div class="form-row"><button id="loginBtn" class="btn">Log in</button></div>
+      <div id="loginMsg" style="color:var(--muted)"></div>
+    </div>
+
+    <div id="adminArea" style="display:none">
+      <div class="admin-wrap">
+        <h3>Manage Music</h3>
+        <div class="form-row">
+          <input id="songTitle" placeholder="Song Title">
+          <input id="songArtist" placeholder="Artist Name">
+          <input type="file" id="musicFile" accept="audio/mpeg,audio/mp3" style="display: none;">
+          <button class="btn ghost" onclick="document.getElementById('musicFile').click()">Upload Music</button>
+        </div>
+        <div id="songsList" class="songs-list"></div>
+
+        <h3>Add new artist</h3>
+        <div class="form-row">
+          <input id="name" placeholder="Name">
+          <input id="id" placeholder="id (optional)">
+        </div>
+        <div class="form-row">
+          <input id="followers" placeholder="Followers / monthly_listeners">
+          <div style="flex: 1; display: flex; gap: 8px;">
+            <input id="image" placeholder="Image path" style="flex: 1;" readonly>
+            <input type="file" id="imageFile" accept="image/*" style="display: none;">
+            <button class="btn ghost" onclick="document.getElementById('imageFile').click()">Browse</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <input id="spotify" placeholder="Spotify URL">
+          <input id="instagram" placeholder="Instagram URL">
+        </div>
+        <div class="form-row">
+          <textarea id="bio" placeholder="Bio / city"></textarea>
+        </div>
+        <div class="form-row">
+          <button id="addBtn" class="btn">Add Artist</button>
+        </div>
+
+        <h3>Existing artists</h3>
+        <div id="artistsAdmin" class="artist-list-admin"></div>
+      </div>
+    </div>
+  </main>
+
+<script>
+let token = null;
+const loginBtn = document.getElementById('loginBtn');
+loginBtn.addEventListener('click', async ()=>{
+  const u = document.getElementById('user').value;
+  const p = document.getElementById('pass').value;
+  const res = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+  if (res.status===200){ 
+    const j=await res.json(); 
+    token=j.token; 
+    document.getElementById('auth').style.display='none'; 
+    document.getElementById('adminArea').style.display='block'; 
+    await loadArtists(); 
+    await loadSongs(); 
+    console.log('Loading complete');
+  }
+  else { document.getElementById('loginMsg').textContent='Invalid creds'; }
+});
+
+async function loadArtists(){
+  const res = await fetch('/api/artists'); const list = await res.json();
+  const wrap = document.getElementById('artistsAdmin'); wrap.innerHTML='';
+  list.forEach(a=>{
+    const div = document.createElement('div'); div.className='artist-item';
+    div.innerHTML = `<div><strong>${a.name}</strong> <small style="color:var(--muted)">(${a.id})</small></div>
+      <div>
+        <button class="editBtn">Edit</button>
+        <button class="delBtn">Delete</button>
+      </div>`;
+    wrap.appendChild(div);
+
+    div.querySelector('.editBtn').addEventListener('click', ()=> populateEdit(a));
+    div.querySelector('.delBtn').addEventListener('click', ()=> doDelete(a.id));
+  });
+}
+
+function populateEdit(a){
+  document.getElementById('name').value = a.name || '';
+  document.getElementById('id').value = a.id || '';
+  document.getElementById('followers').value = a.followers || '';
+  document.getElementById('image').value = a.image || '';
+  document.getElementById('spotify').value = a.spotify || '';
+  document.getElementById('instagram').value = a.instagram || '';
+  document.getElementById('bio').value = a.bio || '';
+  // change add to update
+  document.getElementById('addBtn').textContent = 'Update Artist';
+  document.getElementById('addBtn').onclick = ()=> doUpdate(a.id);
+}
+
+async function doUpdate(id){
+  const payload = {
+    id: document.getElementById('id').value || id,
+    name: document.getElementById('name').value,
+    followers: document.getElementById('followers').value,
+    image: document.getElementById('image').value,
+    spotify: document.getElementById('spotify').value,
+    instagram: document.getElementById('instagram').value,
+    bio: document.getElementById('bio').value
+  };
+  const res = await fetch('/api/artists/'+encodeURIComponent(id), {method:'PUT', headers:{'Content-Type':'application/json','X-Auth-Token':token}, body:JSON.stringify(payload)});
+  if (res.ok) { alert('Updated'); loadArtists(); resetForm(); }
+  else alert('Update failed');
+}
+
+async function doDelete(id){
+  if (!confirm('Delete artist?')) return;
+  const res = await fetch('/api/artists/'+encodeURIComponent(id), {method:'DELETE', headers:{'X-Auth-Token':token}});
+  if (res.ok) { alert('Deleted'); loadArtists(); }
+  else alert('Delete failed');
+}
+
+document.getElementById('addBtn').addEventListener('click', async ()=>{
+  if (document.getElementById('addBtn').textContent === 'Update Artist') return;
+  const payload = {
+    id: document.getElementById('id').value || undefined,
+    name: document.getElementById('name').value,
+    followers: document.getElementById('followers').value,
+    image: document.getElementById('image').value,
+    spotify: document.getElementById('spotify').value,
+    instagram: document.getElementById('instagram').value,
+    bio: document.getElementById('bio').value
+  };
+  const res = await fetch('/api/artists', {method:'POST', headers:{'Content-Type':'application/json','X-Auth-Token':token}, body:JSON.stringify(payload)});
+  if (res.ok) { alert('Added'); loadArtists(); resetForm(); }
+  else { alert('Add failed'); }
+});
+
+function resetForm(){
+  document.getElementById('name').value = '';
+  document.getElementById('id').value = '';
+  document.getElementById('followers').value = '';
+  document.getElementById('image').value = '';
+  document.getElementById('spotify').value = '';
+  document.getElementById('instagram').value = '';
+  document.getElementById('bio').value = '';
+  document.getElementById('addBtn').textContent = 'Add Artist';
+  document.getElementById('addBtn').onclick = null;
+}
+
+// Music Management
+async function loadSongs() {
+  try {
+    console.log('Fetching songs...');
+    const res = await fetch('/api/songs');
+    if (!res.ok) {
+      throw new Error('Failed to fetch songs: ' + res.status);
+    }
+    const songs = await res.json();
+    console.log('Songs loaded:', songs);
+    
+    const list = document.getElementById('songsList');
+    list.innerHTML = '';
+    
+    if (songs.length === 0) {
+      list.innerHTML = '<div class="song-item"><em style="color:var(--muted)">No songs uploaded yet</em></div>';
+      return;
+    }
+    
+    songs.forEach(song => {
+      const div = document.createElement('div');
+      div.className = 'song-item';
+      div.innerHTML = `
+        <div>
+          <strong>${escapeHtml(song.title)}</strong>
+          <small style="color:var(--muted)"> - ${escapeHtml(song.artist)}</small>
+        </div>
+        <div>
+          <audio src="${song.path}" preload="none"></audio>
+          <button class="btn ghost" onclick="deleteSong('${song.id}')">Delete</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  } catch (error) {
+    console.error('Error loading songs:', error);
+    document.getElementById('songsList').innerHTML = 
+      `<div class="song-item" style="color:var(--accent2)">Error loading songs: ${error.message}</div>`;
+  }
+}
+
+async function deleteSong(id) {
+  if (!confirm('Delete this song?')) return;
+  
+  const res = await fetch('/api/songs/' + encodeURIComponent(id), {
+    method: 'DELETE',
+    headers: {
+      'X-Auth-Token': token
+    }
+  });
+  
+  if (res.ok) {
+    alert('Song deleted');
+    loadSongs();
+  } else {
+    alert('Failed to delete song');
+  }
+}
+
+document.getElementById('musicFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  if (!file.type.includes('audio')) {
+    alert('Please select an audio file');
+    e.target.value = '';
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('music', file);
+  formData.append('title', document.getElementById('songTitle').value || file.name.replace('.mp3', ''));
+  formData.append('artist', document.getElementById('songArtist').value || 'Unknown Artist');
+
+  try {
+    console.log('Uploading file:', file.name);
+    const res = await fetch('/api/upload-music', {
+      method: 'POST',
+      headers: {
+        'X-Auth-Token': token
+      },
+      body: formData
+    });
+
+    const data = await res.json();
+    console.log('Upload response:', data);
+
+    if (!res.ok || !data.ok) {
+      throw new Error(data.error || 'Upload failed');
+    }
+
+    document.getElementById('songTitle').value = '';
+    document.getElementById('songArtist').value = '';
+    document.getElementById('musicFile').value = '';
+    await loadSongs();
+    alert('Song uploaded successfully!');
+  } catch (err) {
+    console.error('Upload error:', err);
+    alert('Upload failed: ' + err.message);
+  }
+});
+
+// Handle file upload
+document.getElementById('imageFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        'X-Auth-Token': token
+      },
+      body: formData
+    });
+
+    if (!res.ok) {
+      throw new Error('Upload failed');
+    }
+
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('image').value = data.path;
+    } else {
+      alert('Upload failed: ' + data.error);
+    }
+  } catch (err) {
+    alert('Upload failed: ' + err.message);
+  }
+});
+</script>
+</body>
+</html>
