@@ -7,55 +7,354 @@
 <title>Admin - SA Underground</title>
 <link rel="stylesheet" href="styles/style.css">
 <style>
-  /* simple admin overrides */
-  .admin-wrap{max-width:900px;margin:24px auto;padding:18px;background:rgba(255,255,255,0.03);border-radius:12px}
-  .form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-  .form-row input, .form-row textarea{flex:1;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
+  /* Enhanced admin styles */
+  .admin-wrap{
+    max-width:900px;
+    margin:24px auto;
+    padding:24px;
+    background:linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  
+  .admin-wrap h3 {
+    color: #fff;
+    margin: 28px 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+    display: inline-block;
+  }
+  
+  .admin-wrap h3:first-child {
+    margin-top: 0;
+  }
+  
+  .form-row{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  
+  .form-row input, 
+  .form-row textarea {
+    flex:1;
+    padding:12px 14px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.04);
+    color:#fff;
+    min-width:120px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+  }
+  
+  .form-row input:focus, 
+  .form-row textarea:focus {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(29,185,84,0.2);
+    outline: none;
+  }
+  
+  .form-row textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .search-admin {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .search-admin input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  
+  .search-admin input::placeholder {
+    color: rgba(255,255,255,0.4);
+  }
+  
+  .search-admin input:focus {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--accent);
+    box-shadow: 0 0 16px rgba(29,185,84,0.2);
+  }
+  
+  .search-admin::before {
+    content: "🔍";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+  }
+  
+  .search-results-info {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    display: none;
+  }
+  
+  .search-results-info.active {
+    display: block;
+  }
+  
   .artist-list-admin{
-    margin-top:12px;
-    border: 1px solid rgba(255,255,255,0.05);
+    margin-top:16px;
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
     padding: 12px;
-    background: rgba(255,255,255,0.01);
+    background: rgba(255,255,255,0.02);
+    max-height: 600px;
+    overflow-y: auto;
   }
+  
+  .artist-list-admin::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .artist-list-admin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .artist-list-admin::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+  }
+  
+  .artist-list-admin::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.2);
+  }
+  
   .artist-item{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:12px;
-    border-radius:8px;
+    padding:14px;
+    border-radius:10px;
     background:rgba(255,255,255,0.03);
     margin-bottom:8px;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid transparent;
   }
+  
   .artist-item:hover {
-    background:rgba(255,255,255,0.05);
-    transform: translateY(-2px);
+    background:rgba(255,255,255,0.08);
+    transform: translateX(4px);
+    border-left-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   }
+  
+  .artist-item-info {
+    flex: 1;
+  }
+  
+  .artist-item-info strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+  .artist-item-meta {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  
+  .artist-item-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
   .artist-item button{
-    margin-left:8px;
-    opacity: 0.7;
+    margin-left:0;
+    opacity: 0.8;
     transition: opacity 0.2s ease;
+    white-space: nowrap;
   }
+  
   .artist-item:hover button {
     opacity: 1;
   }
-  .login-box{max-width:420px;margin:20px auto;padding:18px}
-  .songs-list { margin-top: 12px; margin-bottom: 24px; }
-  .song-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255,255,255,0.02); margin-bottom: 8px; border-radius: 6px; }
-  #image { background-color: rgba(255,255,255,0.02); cursor: default; }
+  
+  .login-box{
+    max-width:420px;
+    margin:40px auto;
+    padding:32px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  
+  .login-box h3 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  .songs-list { 
+    margin-top: 16px; 
+    margin-bottom: 24px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .song-item { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 12px 14px; 
+    background: rgba(255,255,255,0.03); 
+    margin-bottom: 8px; 
+    border-radius: 8px;
+    border-left: 3px solid rgba(255,255,255,0.04);
+    transition: all 0.2s ease;
+  }
+  
+  .song-item:hover {
+    background: rgba(255,255,255,0.06);
+    border-left-color: var(--accent);
+    transform: translateX(4px);
+  }
+  
+  #image { 
+    background-color: rgba(255,255,255,0.03); 
+    cursor: default; 
+  }
   
   @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
   }
+
+  @keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+  }
+  
+  @keyframes fadeInDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
   
   .delBtn {
     transition: background-color 0.3s, opacity 0.3s;
+    background: var(--accent2) !important;
   }
+  
   .delBtn:disabled {
-    opacity: 0.7;
+    opacity: 0.5;
     cursor: not-allowed;
+  }
+  
+  .editBtn {
+    background: var(--accent) !important;
+  }
+  
+  .scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--accent);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 4px 16px rgba(29,185,84,0.4);
+  }
+  
+  .scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .scroll-to-top:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 24px rgba(29,185,84,0.6);
+  }
+
+  .pending-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 16px;
+    align-items: start;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(255,193,7,0.08) 0%, rgba(255,193,7,0.02) 100%);
+    border: 1px solid rgba(255,193,7,0.2);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    animation: slideIn 0.3s ease;
+  }
+
+  .pending-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .pending-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pending-item-info h4 {
+    margin: 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .pending-item-info p {
+    margin: 0;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+  }
+
+  .pending-item-actions {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+  }
+
+  .pending-item-actions button {
+    padding: 8px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .approve-btn {
+    background: #1FD35E !important;
+  }
+
+  .reject-btn {
+    background: #E91E63 !important;
   }
 </style>
 </head>
@@ -105,11 +404,25 @@
           <button id="addBtn" class="btn">Add Artist</button>
         </div>
 
+        <h3>Pending submissions</h3>
+        <div id="pendingSection" style="display: none;">
+          <div id="pendingList" class="artist-list-admin"></div>
+          <div id="noPendingMsg" style="color: var(--muted); text-align: center; padding: 20px;">
+            No pending submissions
+          </div>
+        </div>
+
         <h3>Existing artists</h3>
+        <div class="search-admin">
+          <input id="artistSearch" type="search" placeholder="Search artists by name or ID...">
+        </div>
+        <div class="search-results-info" id="searchInfo"></div>
         <div id="artistsAdmin" class="artist-list-admin"></div>
       </div>
     </div>
   </main>
+  
+  <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">↑</button>
 
   <footer class="site-footer">
     <small>
@@ -125,22 +438,74 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+// Scroll to top functionality
+const scrollToTopBtn = document.getElementById('scrollToTop');
+window.addEventListener('scroll', () => {
+  if (window.pageYOffset > 300) {
+    scrollToTopBtn.classList.add('show');
+  } else {
+    scrollToTopBtn.classList.remove('show');
+  }
+});
+
+scrollToTopBtn.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+
+// Smooth scroll to admin area after login
+function scrollToAdminArea() {
+  const adminArea = document.getElementById('adminArea');
+  if (adminArea) {
+    setTimeout(() => {
+      adminArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }
+}
+
 let token = null;
+let allArtists = []; // Store all artists for filtering
+
 const loginBtn = document.getElementById('loginBtn');
 loginBtn.addEventListener('click', async ()=>{
-  const u = document.getElementById('user').value;
-  const p = document.getElementById('pass').value;
-  const res = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
-  if (res.status===200){ 
-    const j=await res.json(); 
-    token=j.token; 
-    document.getElementById('auth').style.display='none'; 
-    document.getElementById('adminArea').style.display='block'; 
-    await loadArtists(); 
-    await loadSongs(); 
-    console.log('Loading complete');
+  const u = document.getElementById('user').value.trim();
+  const p = document.getElementById('pass').value.trim();
+  
+  if (!u || !p) {
+    document.getElementById('loginMsg').textContent = 'Please enter username and password';
+    return;
   }
-  else { document.getElementById('loginMsg').textContent='Invalid creds'; }
+  
+  try {
+    const res = await fetch('/api/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username:u,password:p})
+    });
+    
+    console.log('Login response status:', res.status);
+    const j = await res.json();
+    console.log('Login response:', j);
+    
+    if (res.status===200){ 
+      token=j.token; 
+      document.getElementById('auth').style.display='none'; 
+      document.getElementById('adminArea').style.display='block'; 
+      await loadArtists(); 
+      await loadSongs(); 
+      await loadPending();
+      scrollToAdminArea();
+      console.log('Loading complete');
+    } else {
+      document.getElementById('loginMsg').textContent = j.error || 'Invalid credentials';
+      console.error('Login failed:', j.error);
+    }
+  } catch (err) {
+    console.error('Login error:', err);
+    document.getElementById('loginMsg').textContent = 'Connection error: ' + err.message;
+  }
 });
 
 async function loadArtists(){
@@ -158,6 +523,7 @@ async function loadArtists(){
     const list = await res.json();
     console.log('Artists loaded:', list); // Debug log
     
+    allArtists = list || []; // Store for filtering
     wrap.innerHTML = ''; // Clear loading message
     
     if (!list || list.length === 0) {
@@ -165,27 +531,7 @@ async function loadArtists(){
       return;
     }
     
-    list.forEach(a => {
-      if (!a || !a.name) return; // Skip invalid entries
-      
-      const div = document.createElement('div');
-      div.className = 'artist-item';
-      div.dataset.id = a.id || '';
-      div.innerHTML = `
-        <div>
-          <strong>${escapeHtml(a.name)}</strong>
-          ${a.id ? `<small style="color:var(--muted)">(${escapeHtml(a.id)})</small>` : ''}
-          ${a.followers ? `<div style="color:var(--muted);font-size:0.9em;margin-top:4px">${escapeHtml(a.followers)}</div>` : ''}
-        </div>
-        <div>
-          <button class="btn ghost editBtn">Edit</button>
-          <button class="btn ghost delBtn" style="background:var(--accent2);margin-left:8px;">Delete</button>
-        </div>`;
-      wrap.appendChild(div);
-
-      div.querySelector('.editBtn').addEventListener('click', () => populateEdit(a));
-      div.querySelector('.delBtn').addEventListener('click', () => doDelete(a.id));
-    });
+    renderArtistsList(list, wrap);
   } catch (error) {
     console.error('Error loading artists:', error);
     wrap.innerHTML = `
@@ -195,6 +541,197 @@ async function loadArtists(){
       </div>`;
   }
 }
+
+async function loadPending(){
+  const wrap = document.getElementById('pendingList');
+  const section = document.getElementById('pendingSection');
+  const noMsg = document.getElementById('noPendingMsg');
+  
+  try {
+    const res = await fetch('/api/pending-artists', {
+      headers: {'x-admin-token': token}
+    });
+    
+    if (!res.ok) {
+      throw new Error(`Failed to load pending: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    const pending = data.pending || [];
+    console.log('Pending loaded:', pending);
+    
+    if (!pending || pending.length === 0) {
+      section.style.display = 'none';
+      wrap.innerHTML = '';
+      return;
+    }
+    
+    section.style.display = 'block';
+    wrap.innerHTML = '';
+    
+    pending.forEach(a => {
+      if (!a || !a.name) return;
+      
+      const div = document.createElement('div');
+      div.className = 'pending-item';
+      div.innerHTML = `
+        <img src="${escapeHtml(a.image || 'images/default.jpg')}" alt="${escapeHtml(a.name)}" onerror="this.src='images/default.jpg'">
+        <div class="pending-item-info">
+          <h4>${escapeHtml(a.name)}</h4>
+          <p>Email: ${escapeHtml(a.email || 'N/A')}</p>
+          <p>Submitted: ${new Date(a.submitted_at).toLocaleDateString()}</p>
+          ${a.bio ? `<p>Bio: ${escapeHtml(a.bio.substring(0, 60))}...</p>` : ''}
+        </div>
+        <div class="pending-item-actions">
+          <button class="btn approve-btn" data-id="${a.id}">Approve</button>
+          <button class="btn reject-btn" data-id="${a.id}">Reject</button>
+        </div>
+      `;
+      wrap.appendChild(div);
+      
+      div.querySelector('.approve-btn').addEventListener('click', async () => {
+        await approvePending(a.id, div);
+      });
+      
+      div.querySelector('.reject-btn').addEventListener('click', async () => {
+        await rejectPending(a.id, div);
+      });
+    });
+  } catch (error) {
+    console.error('Error loading pending:', error);
+    wrap.innerHTML = `<div style="color:var(--accent2);padding:20px;">Error loading pending: ${error.message}</div>`;
+  }
+}
+
+async function approvePending(id, element) {
+  try {
+    const res = await fetch(`/api/pending-artists/${id}/approve`, {
+      method: 'POST',
+      headers: {'x-admin-token': token}
+    });
+    
+    if (!res.ok) {
+      const err = await res.json();
+      alert('Error: ' + (err.error || 'Unknown error'));
+      return;
+    }
+    
+    const data = await res.json();
+    console.log('Artist approved:', data);
+    
+    // Remove from pending list with animation
+    element.style.animation = 'slideOut 0.3s ease forwards';
+    setTimeout(() => {
+      element.remove();
+      
+      // Check if list is now empty
+      if (document.getElementById('pendingList').children.length === 0) {
+        document.getElementById('pendingSection').style.display = 'none';
+      }
+      
+      // Reload artists list
+      loadArtists();
+    }, 300);
+  } catch (error) {
+    console.error('Approve error:', error);
+    alert('Error approving artist: ' + error.message);
+  }
+}
+
+async function rejectPending(id, element) {
+  if (!confirm('Are you sure you want to reject this submission?')) {
+    return;
+  }
+  
+  try {
+    const res = await fetch(`/api/pending-artists/${id}/reject`, {
+      method: 'POST',
+      headers: {'x-admin-token': token}
+    });
+    
+    if (!res.ok) {
+      const err = await res.json();
+      alert('Error: ' + (err.error || 'Unknown error'));
+      return;
+    }
+    
+    const data = await res.json();
+    console.log('Artist rejected:', data);
+    
+    // Remove from pending list with animation
+    element.style.animation = 'slideOut 0.3s ease forwards';
+    setTimeout(() => {
+      element.remove();
+      
+      // Check if list is now empty
+      if (document.getElementById('pendingList').children.length === 0) {
+        document.getElementById('pendingSection').style.display = 'none';
+      }
+    }, 300);
+  } catch (error) {
+    console.error('Reject error:', error);
+    alert('Error rejecting artist: ' + error.message);
+  }
+}
+
+function renderArtistsList(artists, wrap) {
+  wrap.innerHTML = '';
+  
+  if (!artists || artists.length === 0) {
+    wrap.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;">No artists found</div>';
+    return;
+  }
+  
+  artists.forEach(a => {
+    if (!a || !a.name) return; // Skip invalid entries
+    
+    const div = document.createElement('div');
+    div.className = 'artist-item';
+    div.dataset.id = a.id || '';
+    div.innerHTML = `
+      <div class="artist-item-info">
+        <strong>${escapeHtml(a.name)}</strong>
+        ${a.id ? `<div class="artist-item-meta">ID: ${escapeHtml(a.id)}</div>` : ''}
+        ${a.followers ? `<div class="artist-item-meta">${escapeHtml(a.followers)}</div>` : ''}
+      </div>
+      <div class="artist-item-actions">
+        <button class="btn ghost editBtn" style="background:var(--accent) !important;">Edit</button>
+        <button class="btn ghost delBtn">Delete</button>
+      </div>`;
+    wrap.appendChild(div);
+
+    div.querySelector('.editBtn').addEventListener('click', () => {
+      populateEdit(a);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    div.querySelector('.delBtn').addEventListener('click', () => doDelete(a.id));
+  });
+}
+
+// Search functionality
+const artistSearch = document.getElementById('artistSearch');
+const searchInfo = document.getElementById('searchInfo');
+
+artistSearch.addEventListener('input', (e) => {
+  const query = e.target.value.trim().toLowerCase();
+  
+  if (!query) {
+    searchInfo.classList.remove('active');
+    renderArtistsList(allArtists, document.getElementById('artistsAdmin'));
+    return;
+  }
+  
+  const filtered = allArtists.filter(a => {
+    const name = (a.name || '').toLowerCase();
+    const id = (a.id || '').toLowerCase();
+    return name.includes(query) || id.includes(query);
+  });
+  
+  searchInfo.classList.add('active');
+  searchInfo.textContent = `Found ${filtered.length} artist${filtered.length !== 1 ? 's' : ''} matching "${escapeHtml(query)}"`;
+  
+  renderArtistsList(filtered, document.getElementById('artistsAdmin'));
+});
 
 function populateEdit(a){
   document.getElementById('name').value = a.name || '';
@@ -220,7 +757,12 @@ async function doUpdate(id){
     bio: document.getElementById('bio').value
   };
   const res = await fetch('/api/artists/'+encodeURIComponent(id), {method:'PUT', headers:{'Content-Type':'application/json','X-Auth-Token':token}, body:JSON.stringify(payload)});
-  if (res.ok) { alert('Updated'); loadArtists(); resetForm(); }
+  if (res.ok) { 
+    showSuccessMessage('Artist updated successfully');
+    loadArtists(); 
+    resetForm();
+    scrollToAdminArea();
+  }
   else alert('Update failed');
 }
 
@@ -248,17 +790,9 @@ async function doDelete(id) {
 
     // Handle the response
     if (res.ok) {
-      // Success - show a nicer message and update the list
-      const successMsg = document.createElement('div');
-      successMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;';
-      successMsg.textContent = 'Artist deleted successfully';
-      document.body.appendChild(successMsg);
-      
-      // Remove the message after 3 seconds
-      setTimeout(() => successMsg.remove(), 3000);
-      
-      // Refresh the artists list
+      showSuccessMessage('Artist deleted successfully');
       await loadArtists();
+      scrollToAdminArea();
     } else {
       // Handle specific error cases
       const errorData = await res.json().catch(() => ({}));
@@ -266,14 +800,7 @@ async function doDelete(id) {
     }
   } catch (error) {
     console.error('Delete error:', error);
-    // Show error message in a nicer way
-    const errorMsg = document.createElement('div');
-    errorMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent2);color:#fff;padding:12px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;';
-    errorMsg.textContent = error.message || 'Failed to delete artist';
-    document.body.appendChild(errorMsg);
-    
-    // Remove the error message after 5 seconds
-    setTimeout(() => errorMsg.remove(), 5000);
+    showErrorMessage(error.message || 'Failed to delete artist');
   } finally {
     // Reset any delete buttons that might be in loading state
     const deleteButtons = document.querySelectorAll('.delBtn');
@@ -282,6 +809,22 @@ async function doDelete(id) {
       btn.textContent = 'Delete';
     });
   }
+}
+
+function showSuccessMessage(text) {
+  const msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent);color:#fff;padding:14px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;box-shadow:0 4px 16px rgba(29,185,84,0.3);';
+  msg.textContent = text;
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 3000);
+}
+
+function showErrorMessage(text) {
+  const msg = document.createElement('div');
+  msg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent2);color:#fff;padding:14px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;box-shadow:0 4px 16px rgba(255,92,92,0.3);';
+  msg.textContent = text;
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 5000);
 }
 
 document.getElementById('addBtn').addEventListener('click', async ()=>{
@@ -296,8 +839,15 @@ document.getElementById('addBtn').addEventListener('click', async ()=>{
     bio: document.getElementById('bio').value
   };
   const res = await fetch('/api/artists', {method:'POST', headers:{'Content-Type':'application/json','X-Auth-Token':token}, body:JSON.stringify(payload)});
-  if (res.ok) { alert('Added'); loadArtists(); resetForm(); }
-  else { alert('Add failed'); }
+  if (res.ok) { 
+    showSuccessMessage('Artist added successfully');
+    loadArtists(); 
+    resetForm();
+    scrollToAdminArea();
+  }
+  else { 
+    showErrorMessage('Failed to add artist'); 
+  }
 });
 
 function resetForm(){
@@ -341,7 +891,7 @@ async function loadSongs() {
         </div>
         <div>
           <audio src="${song.path}" preload="none"></audio>
-          <button class="btn ghost" onclick="deleteSong('${song.id}')">Delete</button>
+          <button class="btn ghost" style="background:var(--accent2) !important;" onclick="deleteSong('${song.id}')">Delete</button>
         </div>
       `;
       list.appendChild(div);
@@ -364,10 +914,10 @@ async function deleteSong(id) {
   });
   
   if (res.ok) {
-    alert('Song deleted');
+    showSuccessMessage('Song deleted successfully');
     loadSongs();
   } else {
-    alert('Failed to delete song');
+    showErrorMessage('Failed to delete song');
   }
 }
 
@@ -376,7 +926,7 @@ document.getElementById('musicFile').addEventListener('change', async (e) => {
   if (!file) return;
 
   if (!file.type.includes('audio')) {
-    alert('Please select an audio file');
+    showErrorMessage('Please select an audio file');
     e.target.value = '';
     return;
   }
@@ -407,10 +957,10 @@ document.getElementById('musicFile').addEventListener('change', async (e) => {
     document.getElementById('songArtist').value = '';
     document.getElementById('musicFile').value = '';
     await loadSongs();
-    alert('Song uploaded successfully!');
+    showSuccessMessage('Song uploaded successfully!');
   } catch (err) {
     console.error('Upload error:', err);
-    alert('Upload failed: ' + err.message);
+    showErrorMessage('Upload failed: ' + err.message);
   }
 });
 
@@ -462,21 +1012,13 @@ document.getElementById('imageFile').addEventListener('change', async (e) => {
     imageInput.value = data.path;
     
     // Show success message
-    const successMsg = document.createElement('div');
-    successMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent);color:#fff;padding:12px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;';
-    successMsg.textContent = 'Image uploaded successfully';
-    document.body.appendChild(successMsg);
-    setTimeout(() => successMsg.remove(), 3000);
+    showSuccessMessage('Image uploaded successfully');
 
   } catch (err) {
     console.error('Upload error:', err);
     
     // Show error message
-    const errorMsg = document.createElement('div');
-    errorMsg.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--accent2);color:#fff;padding:12px 20px;border-radius:8px;animation:slideIn 0.3s ease;z-index:1000;';
-    errorMsg.textContent = 'Upload failed: ' + err.message;
-    document.body.appendChild(errorMsg);
-    setTimeout(() => errorMsg.remove(), 5000);
+    showErrorMessage('Upload failed: ' + err.message);
     
     // Restore original value if there was one
     imageInput.value = originalValue;

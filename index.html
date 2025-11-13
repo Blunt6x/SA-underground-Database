@@ -6,46 +6,220 @@
 <title>SA Underground — Artists</title>
 <link rel="stylesheet" href="styles/style.css">
 <meta name="description" content="Directory of SA underground rappers" />
+<style>
+  /* Enhanced landing and sorting */
+  .hero-section {
+    background: linear-gradient(135deg, rgba(29,185,84,0.1) 0%, rgba(255,92,92,0.05) 100%);
+    padding: 60px 24px;
+    text-align: center;
+    margin-bottom: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(29,185,84,0.2);
+    animation: fadeInDown 0.6s ease-out;
+  }
+
+  .hero-section h2 {
+    font-size: 36px;
+    margin: 0 0 12px;
+    background: linear-gradient(135deg, var(--accent) 0%, #ff5c5c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .hero-section p {
+    color: var(--muted);
+    font-size: 16px;
+    margin: 0;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .sort-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    animation: slideInUp 0.5s ease-out 0.1s backwards;
+  }
+
+  .sort-label {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .sort-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .sort-btn:hover,
+  .sort-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29,185,84,0.3);
+  }
+
+  .signup-btn {
+    margin-left: auto;
+    background: var(--accent2) !important;
+  }
+
+  .signup-btn:hover {
+    box-shadow: 0 4px 12px rgba(255,92,92,0.3) !important;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
 </head>
 <body>
   <header class="site-header">
     <div class="brand">
       <h1>SA Underground Database</h1>
-      <p class="subtitle">Directory — Search • Listen • Support</p>
+      <p class="subtitle">Discover • Support • Connect</p>
     </div>
   </header>
 
   <main class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h2>Discover Underground Talent</h2>
+      <p>Explore emerging artists from South Africa's underground scene. Search, listen, and support your favorite musicians.</p>
+    </div>
+
+    <!-- Controls & Sort -->
     <div class="controls">
       <div class="search-row">
-        <input id="search" type="search" placeholder="Search artists..." aria-label="Search artists">
+        <input id="search" type="search" placeholder="Search artists by name..." aria-label="Search artists">
       </div>
       <div class="actions">
         <button id="adminBtn" class="btn ghost">Admin</button>
+        <a href="manage.html" id="loginBtn" class="btn ghost">Login</a>
+        <a href="join.html" id="signupBtn" class="btn">Join</a>
       </div>
     </div>
 
+    <!-- Sort Controls -->
+    <div class="sort-controls">
+      <span class="sort-label">Sort by:</span>
+      <button class="sort-btn active" data-sort="featured">Featured</button>
+      <button class="sort-btn" data-sort="name">Name (A-Z)</button>
+      <button class="sort-btn" data-sort="followers">Popularity</button>
+      <button class="sort-btn" data-sort="recently-added">Recently Added</button>
+    </div>
+
+    <!-- Enhanced Music Player -->
     <div id="musicPlayer" class="music-player">
       <div class="music-controls">
         <button id="prevBtn" class="btn ghost" aria-label="Previous song">⏮</button>
         <button id="playBtn" class="btn ghost" aria-label="Play/Pause">▶️</button>
         <button id="nextBtn" class="btn ghost" aria-label="Next song">⏭</button>
-        <input type="range" id="volumeSlider" min="0" max="100" value="100" class="volume-slider">
+        <input type="range" id="volumeSlider" min="0" max="100" value="100" class="volume-slider" aria-label="Volume">
       </div>
       <div class="music-info">
         <div id="songTitle">Select a song</div>
         <div id="songArtist" class="song-artist"></div>
+        <div class="player-progress-container">
+          <div id="progressBar" class="progress-bar"></div>
+          <span id="timeDisplay" class="time-display">0:00 / 0:00</span>
+        </div>
       </div>
       <audio id="audioPlayer"></audio>
     </div>
 
+    <!-- Artists List -->
     <ul id="artists" class="artist-list" aria-live="polite"></ul>
   </main>
 
+  <!-- Artist Detail Modal (Enhanced) -->
   <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-content">
+    <div class="modal-content artist-modal">
       <button id="modalClose" class="close" aria-label="Close">×</button>
       <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content signup-form-container">
+      <button class="close" onclick="closeSignupModal()" aria-label="Close">×</button>
+      <h2>Join SA Underground</h2>
+      <p class="subtitle-text">Add yourself to the network</p>
+      
+      <form id="signupForm" style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+        <div class="form-group">
+          <label>Artist Name *</label>
+          <input type="text" id="signupName" placeholder="Your artist name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="signupEmail" placeholder="your@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label>Artist ID (optional)</label>
+          <input type="text" id="signupId" placeholder="e.g., myartist_sa">
+        </div>
+
+        <div class="form-group">
+          <label>Bio / Location</label>
+          <textarea id="signupBio" placeholder="Tell us about yourself..." rows="3"></textarea>
+        </div>
+
+        <div class="form-row-inline">
+          <div class="form-group" style="flex: 1;">
+            <label>Spotify URL (optional)</label>
+            <input type="url" id="signupSpotify" placeholder="https://open.spotify.com/artist/...">
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Instagram (optional)</label>
+            <input type="url" id="signupInstagram" placeholder="https://instagram.com/...">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>SoundCloud (optional)</label>
+          <input type="url" id="signupSoundcloud" placeholder="https://soundcloud.com/...">
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%; margin-top: 8px;">Submit Profile</button>
+      </form>
     </div>
   </div>
 

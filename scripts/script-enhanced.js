@@ -12,13 +12,6 @@ const signupForm = document.getElementById('signupForm');
 
 let artists = [];
 let currentSort = 'featured';
-// local like tracking key
-const LS_LIKED_KEY = 'sa_ug_liked_v1';
-
-function getLikedSet(){
-  try{ return new Set(JSON.parse(localStorage.getItem(LS_LIKED_KEY) || '[]')); }catch(e){ return new Set(); }
-}
-function saveLikedSet(s){ localStorage.setItem(LS_LIKED_KEY, JSON.stringify(Array.from(s))); }
 
 // ========== SORTING FUNCTIONALITY ==========
 const sortButtons = document.querySelectorAll('.sort-btn');
@@ -101,52 +94,10 @@ function renderList(list) {
         <div class="artist-name">${escapeHtml(a.name)}</div>
         <div class="artist-meta">${escapeHtml(a.followers || '—')}</div>
       </div>
-      <div class="artist-actions" style="display:flex;align-items:center;gap:10px;margin-left:auto;">
-        <button class="btn like-btn" data-id="${escapeHtml(a.id)}">❤ <span class="like-count">${a.likes||0}</span></button>
-      </div>
     `;
     li.addEventListener('click', (e)=> openDetail(a, e));
     li.addEventListener('keypress', (e)=>{ if(e.key==='Enter') openDetail(a, e); });
     artistsEl.appendChild(li);
-
-    // attach like handler with local-storage prevention of double-likes per browser
-    const likeBtn = li.querySelector('.like-btn');
-    const likedSet = getLikedSet();
-    if (likeBtn) {
-      const aid = likeBtn.dataset.id;
-      if (likedSet.has(aid)) {
-        likeBtn.classList.add('liked');
-        likeBtn.disabled = true;
-      }
-
-      likeBtn.addEventListener('click', async (ev) => {
-        ev.stopPropagation();
-        const artistId = likeBtn.dataset.id;
-        // prevent double-clicks locally
-        const currentLiked = getLikedSet();
-        if (currentLiked.has(artistId)) return;
-
-        likeBtn.disabled = true;
-        try {
-          const resp = await fetch(`/api/artists/${encodeURIComponent(artistId)}/like`, { method: 'POST' });
-          const data = await resp.json();
-          if (resp.ok && data.ok) {
-            const span = likeBtn.querySelector('.like-count');
-            if (span) span.textContent = data.likes;
-            // mark liked locally
-            const s = getLikedSet(); s.add(artistId); saveLikedSet(s);
-            likeBtn.classList.add('liked');
-            likeBtn.disabled = true;
-          } else {
-            console.error('Like failed', data);
-            likeBtn.disabled = false;
-          }
-        } catch (err) {
-          console.error('Like error', err);
-          likeBtn.disabled = false;
-        }
-      });
-    }
   });
 }
 
@@ -402,89 +353,68 @@ audioPlayer.addEventListener('ended', () => {
 loadSongs();
 
 // ========== SIGNUP FUNCTIONALITY ==========
-if (signupBtn) {
-  signupBtn.addEventListener('click', () => {
-    signupModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    console.log('Signup modal opened');
-  });
-}
+signupBtn.addEventListener('click', () => {
+  signupModal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+});
 
 function closeSignupModal() {
-  if (signupModal) {
-    signupModal.classList.add('hidden');
-    document.body.style.overflow = '';
-    if (signupForm) signupForm.reset();
-    console.log('Signup modal closed');
-  }
+  signupModal.classList.add('hidden');
+  document.body.style.overflow = '';
+  signupForm.reset();
 }
 
-const closeBtn = document.querySelector('#signupModal .close');
-if (closeBtn) {
-  closeBtn.addEventListener('click', closeSignupModal);
-}
+document.querySelector('#signupModal .close').addEventListener('click', closeSignupModal);
+signupModal.addEventListener('click', (e) => {
+  if (e.target === signupModal) closeSignupModal();
+});
 
-if (signupModal) {
-  signupModal.addEventListener('click', (e) => {
-    if (e.target === signupModal) closeSignupModal();
-  });
-}
+signupForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const newArtist = {
+    name: document.getElementById('signupName').value.trim(),
+    email: document.getElementById('signupEmail').value.trim(),
+    id: document.getElementById('signupId').value.trim() || 
+        document.getElementById('signupName').value.trim().toLowerCase().replace(/\s+/g, '_'),
+    bio: document.getElementById('signupBio').value.trim(),
+    spotify: document.getElementById('signupSpotify').value.trim(),
+    instagram: document.getElementById('signupInstagram').value.trim(),
+    soundcloud: document.getElementById('signupSoundcloud').value.trim(),
+    image: 'images/default.jpg',
+    followers: 'New Artist'
+  };
 
-if (signupForm) {
-  signupForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    console.log('Signup form submitted');
-    
-    const newArtist = {
-      name: document.getElementById('signupName').value.trim(),
-      email: document.getElementById('signupEmail').value.trim(),
-      id: document.getElementById('signupId').value.trim() || 
-          document.getElementById('signupName').value.trim().toLowerCase().replace(/\s+/g, '_'),
-      bio: document.getElementById('signupBio').value.trim(),
-      spotify: document.getElementById('signupSpotify').value.trim(),
-      instagram: document.getElementById('signupInstagram').value.trim(),
-      soundcloud: document.getElementById('signupSoundcloud').value.trim(),
-      image: 'images/default.jpg',
-      followers: 'New Artist'
-    };
-    
-    console.log('Submitting artist:', newArtist);
+  try {
+    const res = await fetch('/api/artists-public', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newArtist)
+    });
 
-    try {
-      const res = await fetch('/api/artists-public', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newArtist)
-      });
+    const data = await res.json();
 
-      console.log('Response status:', res.status);
-      const data = await res.json();
-      console.log('Response data:', data);
-
-      if (res.ok) {
-        alert('🎉 Welcome to SA Underground! Your profile has been added. Check it out!');
-        closeSignupModal();
-        // Reload artists
-        fetch('data/artists.json')
-          .then(r => r.json())
-          .then(data => {
-            artists = data;
-            renderList(artists);
-            console.log('Artists reloaded after signup');
-          });
-      } else {
-        alert('Error: ' + (data.error || 'Could not add profile'));
-      }
-    } catch (err) {
-      console.error('Signup error:', err);
-      alert('Error submitting profile: ' + err.message);
+    if (res.ok) {
+      alert('🎉 Welcome to SA Underground! Your profile has been added. Check it out!');
+      closeSignupModal();
+      // Reload artists
+      fetch('data/artists.json')
+        .then(r => r.json())
+        .then(data => {
+          artists = data;
+          renderList(artists);
+        });
+    } else {
+      alert('Error: ' + (data.error || 'Could not add profile'));
     }
-  });
-}
+  } catch (err) {
+    alert('Error submitting profile: ' + err.message);
+  }
+});
 
 // Close signup modal with Escape
 document.addEventListener('keydown', (e) => {
-  if (signupModal && e.key === 'Escape' && !signupModal.classList.contains('hidden')) {
+  if (e.key === 'Escape' && !signupModal.classList.contains('hidden')) {
     closeSignupModal();
   }
 });

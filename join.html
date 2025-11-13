@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Join — SA Underground</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <style>
+    .join-wrap{ max-width:720px;margin:48px auto;padding:24px;background:linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4));border-radius:12px;color:#fff }
+    .join-wrap h1{ margin:0 0 12px }
+    .form-row{ display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px }
+    input,textarea{ width:100%; padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:#fff }
+    .note{ font-size:13px;color:var(--muted) }
+    .btn{ padding:10px 14px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer }
+  </style>
+</head>
+<body>
+  <main class="join-wrap">
+    <h1>Join SA Underground</h1>
+    <p class="note">Create your artist profile and upload a track. Your profile will be added to the main site after submission.</p>
+
+    <form id="joinForm" style="margin-top:18px;">
+      <div class="form-row"><input id="name" placeholder="Artist name" required></div>
+      <div class="form-row"><input id="email" type="email" placeholder="Email address" required></div>
+      <div class="form-row"><input id="id" placeholder="Artist ID (optional)"></div>
+      <div class="form-row"><textarea id="bio" placeholder="Bio / Location" rows="4"></textarea></div>
+      <div class="form-row"><input id="spotify" placeholder="Spotify URL (optional)"></div>
+      <div class="form-row"><input id="instagram" placeholder="Instagram URL (optional)"></div>
+
+      <div class="form-row">
+        <div style="flex:1">
+          <label>Profile Image (optional)</label>
+          <input type="file" id="imageFile" accept="image/*">
+        </div>
+        <div style="flex:1">
+          <label>Track (optional, MP3)</label>
+          <input type="file" id="musicFile" accept="audio/mpeg">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center;margin-top:12px;">
+        <button class="btn" type="submit">Submit profile</button>
+        <a href="/" class="btn" style="background:var(--accent2);text-decoration:none;display:inline-block;padding:10px 14px">Back</a>
+      </div>
+      <div style="margin-top:12px;font-size:14px;color:var(--muted)">Already joined? <a href="manage.html" style="color:var(--accent)">Sign in</a></div>
+      <div id="msg" style="margin-top:12px" class="note"></div>
+    </form>
+  </main>
+
+  <script src="scripts/join.js"></script>
+</body>
+</html>
