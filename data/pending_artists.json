@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "name": "PendingTestArtist",
+    "email": "pending@example.com",
+    "bio": "Test artist for pending approval",
+    "id": "pendingtestartist",
+    "image": "images/default.jpg",
+    "followers": "New Artist",
+    "monthly_listeners": "0",
+    "likes": 0,
+    "status": "pending",
+    "submitted_at": "2025-11-13T21:08:03.383Z"
+  }
+]

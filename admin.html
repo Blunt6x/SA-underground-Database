@@ -264,6 +264,59 @@
     cursor: not-allowed;
   }
   
+  .pending-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(255, 193, 7, 0.08);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+  }
+  
+  .pending-item:hover {
+    background: rgba(255, 193, 7, 0.12);
+    border-color: rgba(255, 193, 7, 0.3);
+  }
+  
+  .pending-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  
+  .pending-item-info {
+    flex: 1;
+  }
+  
+  .pending-item-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: #fff;
+  }
+  
+  .pending-item-info p {
+    margin: 2px 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  
+  .pending-item-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .approve-btn {
+    background: var(--accent) !important;
+  }
+  
+  .reject-btn {
+    background: var(--accent2) !important;
+  }
+  
   .editBtn {
     background: var(--accent) !important;
   }

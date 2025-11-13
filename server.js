@@ -38,9 +38,7 @@ function readPending() {
   }
 }
 function writePending(arr) {
-  console.log('writePending called with', arr.length, 'items');
   fs.writeFileSync(PENDING_FILE, JSON.stringify(arr, null, 2), 'utf8');
-  console.log('Pending file written');
 }
 
 app.use(cors());
@@ -390,9 +388,7 @@ app.post('/api/artists-public', (req, res) => {
     newArtist.status = 'pending'; // Mark as pending for admin review
     newArtist.submitted_at = new Date().toISOString();
     
-    console.log('About to push artist to pending:', newArtist.name);
     pending.push(newArtist);
-    console.log('Artist pushed, pending now has', pending.length, 'items');
     writePending(pending);
     gitCommit(`Add pending artist submission: ${newArtist.name}`);
     
