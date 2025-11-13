@@ -956,5 +956,14 @@
     "followers": "New Artist",
     "monthly_listeners": "0",
     "likes": 0
+  },
+  {
+    "name": "TestArtist3",
+    "email": "test3@example.com",
+    "id": "testartist3",
+    "image": "images/default.jpg",
+    "followers": "New Artist",
+    "monthly_listeners": "0",
+    "likes": 0
   }
 ]
